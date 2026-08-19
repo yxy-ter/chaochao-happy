@@ -1,1 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七夕快乐 💙</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a5c 40%, #2d6a9f 70%, #4a9fd4 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+            color: #fff;
+        }
 
+        /* 鲸鱼背景 */
+        .whale-bg {
+            position: fixed;
+            bottom: -20px;
+            right: -50px;
+            font-size: 280px;
+            opacity: 0.15;
+            animation: whaleFloat 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .whale-small {
+            position: fixed;
+            top: 60px;
+            left: 30px;
+            font-size: 80px;
+            opacity: 0.1;
+            animation: whaleFloat 8s ease-in-out infinite reverse;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes whaleFloat {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-30px) rotate(2deg); }
+        }
+
+        /* 气泡动画 */
+        .bubble {
+            position: fixed;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            animation: rise linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-20vh) scale(1); opacity: 0; }
+        }
+
+        /* 主内容 */
+        .container {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 40px;
+            max-width: 600px;
+        }
+
+        .title {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(74,159,212,0.8);
+            animation: fadeInDown 1s ease;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.8;
+            margin-bottom: 50px;
+            animation: fadeInDown 1s ease 0.3s both;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .btn {
+            padding: 16px 36px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-memory {
+            background: linear-gradient(135deg, #4a9fd4, #2d6a9f);
+            color: #fff;
+            box-shadow: 0 8px 30px rgba(74,159,212,0.4);
+        }
+
+        .btn-better {
+            background: linear-gradient(135deg, #6ec6ff, #4a9fd4);
+            color: #0a1628;
+            box-shadow: 0 8px 30px rgba(110,198,255,0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 40px rgba(74,159,212,0.6);
+        }
+
+        .btn:active { transform: translateY(0) scale(0.98); }
+
+        /* 视频弹窗 */
+        .video-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(10,22,40,0.92);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .video-overlay.active { display: flex; }
+
+        .video-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 700px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .video-wrapper video {
+            width: 100%;
+            display: block;
+            border-radius: 16px;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .close-btn:hover { background: rgba(255,255,255,0.4); }
+
+        .video-title {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 16px;
+            opacity: 0.9;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 星星粒子 */
+        .stars {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .star {
+            position: absolute;
+            width: 3px; height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 星星背景 -->
+    <div class="stars" id="stars"></div>
+
+    <!-- 鲸鱼装饰 -->
+    <div class="whale-bg">🐋</div>
+    <div class="whale-small">🐋</div>
+
+    <!-- 主内容 -->
+    <div class="container">
+        <div class="title">七夕快乐 💙</div>
+        <div class="subtitle">致最可爱的你，愿每一天都如鲸鱼般自由快乐</div>
+        
+        <div class="btn-group">
+
+<!-- 将这段代码放在 body 中，替换或追加到原有的 container 区域 -->
+<div class="letter-container">
+    <!-- 未打开的信封 -->
+    <div class="envelope" id="envelope" onclick="openLetter()">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body">
+            <span> 点击打开信件</span>
+        </div>
+    </div>
+
+    <!-- 展开的信纸 -->
+    <div class="letter-paper" id="letterPaper">
+        <div class="letter-content">
+            <h3>致 闪闪发光的你 </h3>
+            <p>
+                见字如面。
+
+
+                其实一直想告诉你，在那些平凡甚至有些疲惫的日子里，
+                是因为看到了你，我才重新找到了前行的力量。
+
+
+                看着你在镜头前努力的样子，看着你一步步变成更好的模样，
+                我也在心底悄悄许下愿望：<strong>我要像你一样，努力提升自己，让自己变得更好。</strong>
+
+
+                谢谢你成为我的光。未来的日子，我们都要在各自的领域里，
+                像鲸鱼一样，自由、坚定地游向更深的海。
+
+
+                七夕快乐，愿你永远可爱，永远热泪盈眶。
+            </p>
+            <div class="signature">—— 一个正在努力变好的粉丝——💫星</div>
+        </div>
+        <button class="close-letter-btn" onclick="closeLetter()">✕ 收起信件</button>
+    </div>
+</div>
+
+<style>
+    /* 信件专属样式 */
+    .letter-container {
+        position: relative;
+        z-index: 10;
+        margin-top: 30px;
+        perspective: 1000px;
+    }
+
+    /* 信封样式 */
+    .envelope {
+        width: 280px;
+        height: 180px;
+        background: #2d6a9f;
+        border-radius: 10px;
+        position: relative;
+        cursor: pointer;
+        margin: 0 auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .envelope:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
+
+    .envelope-flap {
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 90px;
+        background: #1a3a5c;
+        clip-path: polygon(0 0, 50% 100%, 100% 0);
+        z-index: 2;
+        transition: all 0.4s ease;
+    }
+
+    .envelope-body {
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        z-index: 1;
+        margin-top: 20px;
+        opacity: 0.9;
+    }
+
+    /* 信纸样式 */
+    .letter-paper {
+        display: none;
+        width: 90%;
+        max-width: 500px;
+        background: rgba(255, 255, 255, 0.95);
+        color: #333;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+        animation: letterOpen 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
+        margin: 0 auto;
+    }
+
+    .letter-paper.active { display: block; }
+
+    .letter-content h3 {
+        color: #2d6a9f;
+        margin-bottom: 20px;
+        font-size: 22px;
+        border-bottom: 2px dashed #eee;
+        padding-bottom: 10px;
+    }
+
+    .letter-content p {
+        line-height: 1.8;
+        font-size: 16px;
+        color: #444;
+        margin-bottom: 20px;
+    }
+
+    .signature {
+        text-align: right;
+        font-style: italic;
+        color: #888;
+        font-size: 14px;
+    }
+
+    .close-letter-btn {
+        position: absolute;
+        top: 10px; right: 10px;
+        background: none; border: none;
+        font-size: 20px; color: #aaa;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+    .close-letter-btn:hover { color: #e74c3c; }
+
+    @keyframes letterOpen {
+        from { opacity: 0; transform: scale(0.8) translateY(30px); }
+        to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* 隐藏信封 */
+    .envelope.hidden { display: none; }
+</style>
+
+<script>
+    function openLetter() {
+        document.getElementById('envelope').classList.add('hidden');
+        document.getElementById('letterPaper').classList.add('active');
+        // 如果希望打开信件时也触发音乐，可以在这里加上播放逻辑
+    }
+
+    function closeLetter() {
+        document.getElementById('letterPaper').classList.remove('active');
+        document.getElementById('envelope').classList.remove('hidden');
+    }
+</script>
+
+            <button class="btn btn-memory" onclick="playVideo('memory')">🎬 回忆</button>
+            <button class="btn btn-better" onclick="playVideo('better')">✨ 更好的你</button>
+        </div>
+    </div>
+
+    <!-- 视频弹窗 -->
+    <div class="video-overlay" id="videoOverlay" onclick="closeVideo(event)">
+        <div class="video-wrapper">
+            <button class="close-btn" onclick="closeVideo(event)">✕</button>
+            <video id="videoPlayer" controls playsinline></video>
+            <div class="video-title" id="videoTitle"></div>
+        </div>
+    </div>
+
+    <!-- 背景音乐 - 已配置为本地 bgm.mp3 -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // ========== 视频配置区域 ==========
+        const videos = {
+            memory: {
+                src: 'video1.mp4',   // 第一段视频：回忆
+                title: '📷 回忆'
+            },
+            better: {
+                src: 'video2.mp4',   // 第二段视频：更好的你
+                title: '✨ 更好的你'
+            }
+        };
+        // ============================
+
+        // 自动播放背景音乐（需要用户点击屏幕触发）
+        window.addEventListener('click', function initAudio() {
+            const bgMusic = document.getElementById('bgMusic');
+            bgMusic.volume = 0.3;
+            bgMusic.play().catch(() => {});
+            window.removeEventListener('click', initAudio);
+        }, { once: true });
+
+        // 播放视频
+        function playVideo(type) {
+            const overlay = document.getElementById('videoOverlay');
+            const video = document.getElementById('videoPlayer');
+            const title = document.getElementById('videoTitle');
+            
+            video.src = videos[type].src;
+            title.textContent = videos[type].title;
+            overlay.classList.add('active');
+            video.play().catch(() => {});
+        }
+
+        // 关闭视频
+        function closeVideo(e) {
+            if (e.target === document.getElementById('videoOverlay') || 
+                e.target.classList.contains('close-btn')) {
+                const overlay = document.getElementById('videoOverlay');
+                const video = document.getElementById('videoPlayer');
+                video.pause();
+                video.currentTime = 0;
+                overlay.classList.remove('active');
+            }
+        }
+
+        // 生成星星
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 60; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.width = star.style.height = (Math.random() * 3 + 1) + 'px';
+            starsContainer.appendChild(star);
+        }
+
+        // 生成气泡
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 40 + 10;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDuration = (Math.random() * 8 + 6) + 's';
+            document.body.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 14000);
+        }
+        setInterval(createBubble, 800);
+
+        // ESC关闭视频
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const overlay = document.getElementById('videoOverlay');
+                if (overlay.classList.contains('active')) {
+                    const video = document.getElementById('videoPlayer');
+                    video.pause();
+                    overlay.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
